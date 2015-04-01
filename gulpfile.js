@@ -30,7 +30,6 @@ gulp.task('jshint', ['jscs'], function() {
   return gulp.src(jsFilesToBeStyleChecked)
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'))
 })
 
 gulp.task('mocha', ['jshint'], function() {
@@ -38,12 +37,20 @@ gulp.task('mocha', ['jshint'], function() {
     .pipe(mocha())
 })
 
-gulp.task('karma', ['mocha'], function(done) {
+gulp.task('karma', ['build', 'mocha'], function(done) {
   karma.start({
     configFile: __dirname + '/test/karma.conf.js',
+    browsers: ['Chrome', 'Firefox'],
     singleRun: true
   }, done)
 })
+gulp.task('tdd', ['build'], function(done) {
+  karma.start({
+    configFile: __dirname + '/test/karma.conf.js',
+    browsers: ['Chrome', 'Firefox'],
+    autoWatch: true
+  }, done);
+});
 
 gulp.task('karma-travisci', ['mocha'], function(done) {
   karma.start({

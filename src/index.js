@@ -1,6 +1,20 @@
 /* global console, module, window, document, navigator, process */
 
-;(function() {
+(function(root, factory) {
+  'use strict'
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like environments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    // Browser globals (root is window)
+    root.Logdown = factory();
+  }
+}(this, function() {
   'use strict'
 
   var instances = []
@@ -517,10 +531,5 @@
     }
   })()
 
-  // Export module
-  if (isNode()) {
-    module.exports = Logdown
-  } else if (isBrowser()) {
-    window.Logdown = Logdown
-  }
-}())
+  return Logdown;
+}));
